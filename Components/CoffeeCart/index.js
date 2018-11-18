@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import { connect } from "react-redux";
 // NativeBase Components
 import {
   Text,
@@ -63,5 +63,11 @@ class CoffeeCart extends Component {
     );
   }
 }
+const mapStateToProps = state => ({
+  coffeeShops: state.rootCoffee.coffeeShops
+});
 
-export default CoffeeCart;
+export default connect(
+  mapStateToProps,
+  null
+)(CoffeeCart);

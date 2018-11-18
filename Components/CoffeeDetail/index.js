@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import { connect } from "react-redux";
 // NativeBase Components
 import {
   Thumbnail,
@@ -16,9 +16,6 @@ import {
 
 // Style
 import styles from "./styles";
-
-// List
-import coffeeshops from "../CoffeeList/list";
 
 class CoffeeDetail extends Component {
   constructor(props) {
@@ -42,8 +39,8 @@ class CoffeeDetail extends Component {
   }
 
   render() {
-    if (!coffeeshops) return <Content />;
-    const coffeeshop = coffeeshops[0];
+    if (!this.props.coffeeShops) return <Content />;
+    const coffeeshop = this.props.coffeeShops[0];
     return (
       <Content>
         <List>
@@ -56,7 +53,7 @@ class CoffeeDetail extends Component {
             </Left>
             <Body />
             <Right>
-              <Thumbnail bordered source={coffeeshop.img} />
+              <Thumbnail bordered source={{ uri: coffeeshop.img }} />
             </Right>
           </ListItem>
           <ListItem style={{ borderBottomWidth: 0 }}>
@@ -95,5 +92,11 @@ class CoffeeDetail extends Component {
     );
   }
 }
+const mapStateToProps = state => ({
+  coffeeShops: state.rootCoffee.coffeeShops
+});
 
-export default CoffeeDetail;
+export default connect(
+  mapStateToProps,
+  null
+)(CoffeeDetail);

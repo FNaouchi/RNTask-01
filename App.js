@@ -1,6 +1,19 @@
 import React from "react";
 import Expo, { AppLoading } from "expo";
-
+import { Provider } from "react-redux";
+import { createStore, combineReducers, compose, applyMiddleware } from "redux";
+import coffeeReducer from "./store/reducers/coffeeReducers";
+import cartReducer from "./store/reducers/cartReducer";
+import thunk from "redux-thunk";
+const rootReducer = combineReducers({
+  rootCoffee: coffeeReducer,
+  rootCart: cartReducer
+});
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(
+  rootReducer,
+  composeEnhancers(applyMiddleware(thunk))
+);
 // Component
 import HomePage from "./Components/HomePage";
 
@@ -22,7 +35,11 @@ class App extends React.Component {
     if (!this.state.fontsAreLoaded) {
       return <AppLoading />;
     }
-    return <HomePage />;
+    return (
+      <Provider store={store}>
+        <HomePage />
+      </Provider>
+    );
   }
 }
 

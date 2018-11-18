@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { ImageBackground, View, TouchableOpacity } from "react-native";
-
+import { connect } from "react-redux";
 // NativeBase Components
 import {
   List,
@@ -16,9 +16,6 @@ import {
 // Style
 import styles from "./styles";
 
-// List
-import coffeeshops from "./list";
-
 class CoffeeList extends Component {
   handlePress() {
     alert("Pressed");
@@ -26,7 +23,10 @@ class CoffeeList extends Component {
   renderItem(shop) {
     return (
       <TouchableOpacity key={shop.id} onPress={() => this.handlePress(shop)}>
-        <ImageBackground source={shop.background} style={styles.background}>
+        <ImageBackground
+          source={{ uri: shop.background }}
+          style={styles.background}
+        >
           <View style={styles.overlay} />
           <ListItem style={styles.transparent}>
             <Card style={styles.transparent}>
@@ -34,7 +34,7 @@ class CoffeeList extends Component {
                 <Left>
                   <Thumbnail
                     bordered
-                    source={shop.img}
+                    source={{ uri: shop.img }}
                     style={styles.thumbnail}
                   />
                   <Text style={styles.text}>{shop.name}</Text>
@@ -50,13 +50,27 @@ class CoffeeList extends Component {
     );
   }
   render() {
-    let ListItems = coffeeshops.map(shop => this.renderItem(shop));
-    return (
-      <Content>
-        <List>{ListItems}</List>
-      </Content>
-    );
+    if (this.props.coffeeShops) {
+      let ListItems = this.props.coffeeShops.map(shop => this.renderItem(shop));
+      return (
+        <Content>
+          <List>{ListItems}</List>
+        </Content>
+      );
+    } else {
+      return (
+        <Content>
+          <Text>There is no coffee for you today!</Text>
+        </Content>
+      );
+    }
   }
 }
+const mapStateToProps = state => ({
+  coffeeShops: state.rootCoffee.coffeeShops
+});
 
-export default CoffeeList;
+export default connect(
+  mapStateToProps,
+  null
+)(CoffeeList);
